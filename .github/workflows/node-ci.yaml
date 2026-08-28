@@ -1,38 +1,49 @@
-name: Matrix Demo Workflow
+name: Multiple Runners Workflow and Choose Jobs
 on:
-  push:
-    branches:
-      - master
-
   workflow_dispatch:
-
+    inputs:
+      runner:
+        description: 'Select the runner to execute the workflow'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        job-name:
+          description: 'Select the job to execute'
+          required: true
+          default: 'job1'
+          type: choice
+          options:
+            - build-job
+            - test-job
+            - deploy-job
 jobs:
-  matrix_demo:
-    continue-on-error: true
-    runs-on: ${{ matrix.operating-system }}
-    strategy:
-      matrix:
-        operating-system: [ubuntu-latest, windows-latest]
-        node-version: [12, 14, 16, 18, 20, 21]
-        include:
-         - operating-system: ubuntu-22.04
-         - node-version: 21
-         - operating-system: windows-2022
-         - node-version: 21
-         
+  build-job:
+    if: ${{ github.event.inputs.job-name == 'build-job' }}
+    runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
-      - name: Install Node.js of version ${{ matrix.node-version }} and npm
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Dependiencies
-        run: npm install
+      - name: Build Project
+        run: echo "Building the project on ${{ github.event.inputs.runner }}"
+  
+  test-job:
+    if: ${{ github.event.inputs.job-name == 'test-job' }}
+    runs-on: ${{ github.event.inputs.runner }}
+    steps:  
+      - name: Checkout Code
+        uses: actions/checkout@v6
       - name: Run Tests
-        run: npm test
-      - name: Show Node.js and npm Versions and Operating System 
-        run: |
-          node -v
-          npm -v
-          echo "Operating System: ${{ matrix.operating-system }}"
+        run: echo "Running tests on ${{ github.event.inputs.runner }}"
+  deploy-job:
+    if: ${{ github.event.inputs.job-name == 'deploy-job' }} 
+    runs-on: ${{ github.event.inputs.runner }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+      - name: Deploy Project
+        run: echo "Deploying the project on ${{ github.event.inputs.runner }}"
+    
