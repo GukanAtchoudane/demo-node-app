@@ -11,7 +11,7 @@ on:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        job-name:
+      job-name:
           description: 'Select the job to execute'
           required: true
           default: 'job1'
@@ -25,8 +25,6 @@ jobs:
     if: ${{ github.event.inputs.job-name == 'build-job' }}
     runs-on: ${{ github.event.inputs.runner }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v6
       - name: Build Project
         run: echo "Building the project on ${{ github.event.inputs.runner }}"
   
@@ -34,16 +32,12 @@ jobs:
     if: ${{ github.event.inputs.job-name == 'test-job' }}
     runs-on: ${{ github.event.inputs.runner }}
     steps:  
-      - name: Checkout Code
-        uses: actions/checkout@v6
       - name: Run Tests
         run: echo "Running tests on ${{ github.event.inputs.runner }}"
   deploy-job:
     if: ${{ github.event.inputs.job-name == 'deploy-job' }} 
     runs-on: ${{ github.event.inputs.runner }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v6
       - name: Deploy Project
         run: echo "Deploying the project on ${{ github.event.inputs.runner }}"
     
