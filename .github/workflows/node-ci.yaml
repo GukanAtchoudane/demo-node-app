@@ -1,31 +1,32 @@
-name: Build and Test Node.js Application
-
+name: Matrix Demo Workflow
 on:
   push:
     branches:
-      - main
+      - master
 
   workflow_dispatch:
 
 jobs:
-  buildnodejs:
-    runs-on: ubuntu-latest
+  matrix_demo:
+    continue-on-error: true
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest]
+        node-version: [12, 14, 16, 18, 20, 21]
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v6
-
-      - name: Setup Node.js
+      - name: Install Node.js of version ${{ matrix.node-version }} and npm
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
-
-      - name: Install Dependencies
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependiencies
         run: npm install
-
       - name: Run Tests
         run: npm test
-
-      - name: Build Application
-        run: npm run build
+      - name: Show Node.js and npm Versions
+        run: |
+          node -v
+          npm -v
