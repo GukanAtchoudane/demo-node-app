@@ -14,7 +14,12 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest, windows-latest]
         node-version: [12, 14, 16, 18, 20, 21]
-
+        include:
+         - operating-system: ubuntu-22.04
+         - node-version: 21
+         - operating-system: windows-2022
+         - node-version: 21
+         
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
