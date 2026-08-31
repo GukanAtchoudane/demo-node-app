@@ -11,7 +11,7 @@ on:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-        job-name:
+      job-name:
           description: 'Enter the job name to execute (build-job, test-job, deploy-job)'
           required: true
           type: string
