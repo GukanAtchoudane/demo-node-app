@@ -15,8 +15,7 @@ jobs:
 
       - name: Checkout Code
         uses: actions/checkout@v6
-
-      - name: Setup Node.js
+      - name: Install Node.js and npm
         uses: actions/setup-node@v6
         with:
           node-version: '18'
@@ -29,10 +28,11 @@ jobs:
 
       - name: Build Application
         run: npm run build
-      
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v6
         with:
           name: build-artifacts
-          path: /home/runner/work/SonarQubeCoverageJava/SonarQubeCoverageJava/target/wicket-pwnedpasswords-validator-2.0.1-SNAPSHOT.jar
-          
+          path: | 
+            dist/
+            package.json
+            package-lock.json
