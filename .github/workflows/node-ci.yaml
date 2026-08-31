@@ -11,15 +11,10 @@ on:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-      job-name:
-          description: 'Select the job to execute'
+        job-name:
+          description: 'Enter the job name to execute (build-job, test-job, deploy-job)'
           required: true
-          default: 'job1'
-          type: choice
-          options:
-            - build-job
-            - test-job
-            - deploy-job
+          type: string
 jobs:
   build-job:
     if: contains(github.event.inputs.job-name, 'build-job')
