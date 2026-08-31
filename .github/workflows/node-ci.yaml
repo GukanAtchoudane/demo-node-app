@@ -1,38 +1,38 @@
-name: Multiple Runners Workflow and Choose Jobs
+name: Build and Test Node.js Application
+
 on:
+  push:
+    branches:
+      - master
+
   workflow_dispatch:
-    inputs:
-      runner:
-        description: 'Select the runner to execute the workflow'
-        required: true
-        default: 'ubuntu-latest'
-        type: choice
-        options:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-      job-name:
-          description: 'Enter the job name to execute (build-job, test-job, deploy-job)'
-          required: true
-          type: string
+
 jobs:
-  build-job:
-    if: contains(github.event.inputs.job-name, 'build-job')
-    runs-on: ${{ github.event.inputs.runner }}
+  buildnodejs:
+    runs-on: self-hosted
+
     steps:
-      - name: Build Project
-        run: echo "Building the project on ${{ github.event.inputs.runner }}"
-  
-  test-job:
-    if: contains(github.event.inputs.job-name, 'test-job')
-    runs-on: ${{ github.event.inputs.runner }}
-    steps:  
+
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
       - name: Run Tests
-        run: echo "Running tests on ${{ github.event.inputs.runner }}"
-  deploy-job:
-    if: contains(github.event.inputs.job-name, 'deploy-job')
-    runs-on: ${{ github.event.inputs.runner }}
-    steps:
-      - name: Deploy Project
-        run: echo "Deploying the project on ${{ github.event.inputs.runner }}"
-    
+        run: npm test
+
+      - name: Build Application
+        run: npm run build
+      
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifacts
+          path: /home/runner/work/SonarQubeCoverageJava/SonarQubeCoverageJava/target/wicket-pwnedpasswords-validator-2.0.1-SNAPSHOT.jar
+          
