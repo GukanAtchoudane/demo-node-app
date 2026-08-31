@@ -22,20 +22,20 @@ on:
             - deploy-job
 jobs:
   build-job:
-    if: ${{ github.event.inputs.job-name == 'build-job' }}
+    if: contains(github.event.inputs.job-name, 'build-job')
     runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Build Project
         run: echo "Building the project on ${{ github.event.inputs.runner }}"
   
   test-job:
-    if: ${{ github.event.inputs.job-name == 'test-job' }}
+    if: contains(github.event.inputs.job-name, 'test-job')
     runs-on: ${{ github.event.inputs.runner }}
     steps:  
       - name: Run Tests
         run: echo "Running tests on ${{ github.event.inputs.runner }}"
   deploy-job:
-    if: ${{ github.event.inputs.job-name == 'deploy-job' }} 
+    if: contains(github.event.inputs.job-name, 'deploy-job')
     runs-on: ${{ github.event.inputs.runner }}
     steps:
       - name: Deploy Project
